@@ -1,61 +1,56 @@
-# Banknotes — Machine Learning Classification Project
+# Banknotes — Machine Learning Classification
 
 A supervised machine learning project that classifies banknotes as **authentic** or **counterfeit** using four numerical features extracted from wavelet-transformed images.
 
 ---
 
-## Features
+## Overview
 
-Each banknote is described by four continuous numerical attributes:
+This project uses a labeled dataset of banknotes and applies several machine learning classification models to predict whether a banknote is genuine or fake.
 
-| Feature | Description |
-|---|---|
-| Variance | Variance of the wavelet-transformed image |
-| Skewness | Skewness of the wavelet-transformed image |
-| Curtosis | Curtosis of the wavelet-transformed image |
-| Entropy | Entropy of the image |
-
-Labels are mapped as follows:
-
-- `0` → **Authentic**
-- `1` → **Counterfeit**
+**The repository includes:**
+- A final `K-Nearest Neighbors` implementation
+- Two starter-style comparison scripts
+- A multi-model comparison script
+- The dataset
+- Setup instructions for running the project locally
 
 ---
 
 ## Project Structure
 
-```
-banknotes/
-├── banknotes.py        # Final K-nearest neighbors implementation
-├── compare_models.py   # Compares multiple ML models side-by-side
-├── banknotes.csv       # Dataset (1,372 samples)
-├── requirements.txt    # Python dependencies
-└── .gitignore          # Excludes venv and cache files
+```text
+ai-banknotes-project/
+│
+├── banknotes.py          # Final KNN implementation
+├── banknotes0.py         # Starter: manual shuffle & holdout split
+├── banknotes1.py         # Starter: train_test_split version
+├── compare_models.py     # Multi-model side-by-side comparison
+├── banknotes.csv         # Dataset
+├── requirements.txt      # Python dependencies
+├── README.md
+├── .gitignore
+└── venv/                 # Local only — not pushed to GitHub
 ```
 
 ---
 
-## How It Works
+## Dataset
 
-1. **Load** the dataset from `banknotes.csv`
-2. **Split** into evidence (first 4 columns) and labels (last column)
-3. **Partition** data into training and testing sets
-4. **Train** a model on the training data
-5. **Predict** labels for the test set
-6. **Evaluate** by counting correct and incorrect predictions
+Each banknote is described by 4 numerical features derived from wavelet-transformed images:
 
----
+| Feature    | Description                              |
+|------------|------------------------------------------|
+| `variance` | Variance of the wavelet-transformed image |
+| `skewness` | Skewness of the wavelet-transformed image |
+| `curtosis` | Curtosis of the wavelet-transformed image |
+| `entropy`  | Entropy of the image                     |
 
-## Models
+**Label mapping:**
+- `0` → Authentic
+- `1` → Counterfeit
 
-This project implements and compares several classification algorithms:
-
-- **K-Nearest Neighbors (KNN)** — primary model in `banknotes.py`
-- **Perceptron** — linear binary classifier
-- **Support Vector Machine (SVM)** — maximum-margin classifier
-- **Gaussian Naive Bayes** — probabilistic classifier based on Bayes' theorem
-
-Model performance is measured using **accuracy** — the proportion of correctly classified banknotes on the held-out test set.
+**Dataset size:** 1,372 samples (1,373 lines including header)
 
 ---
 
@@ -63,27 +58,49 @@ Model performance is measured using **accuracy** — the proportion of correctly
 
 - Supervised learning
 - Binary classification
-- Train/test split
-- Model evaluation with accuracy metrics
-- Comparison of multiple ML algorithms
+- Train/test splitting
+- Model fitting and prediction
+- Accuracy-based evaluation
+- Comparing multiple ML algorithms
+
+---
+
+## Models Used
+
+| Model | Description |
+|-------|-------------|
+| **K-Nearest Neighbors (KNN)** | Classifies based on proximity to training examples |
+| **Perceptron** | Linear classifier inspired by neural architecture |
+| **Support Vector Machine (SVM)** | Finds optimal decision boundary with maximum margin |
+| **Gaussian Naive Bayes** | Probabilistic classifier assuming feature independence |
+
+---
+
+## How It Works
+
+1. Load the dataset from `banknotes.csv`
+2. Split each row into:
+   - `evidence` — first 4 columns (features)
+   - `label` — last column (authentic or counterfeit)
+3. Convert feature values to floating-point numbers
+4. Split data into training and testing sets
+5. Train a machine learning model
+6. Predict labels on the testing set
+7. Evaluate results using:
+   - Correct predictions
+   - Incorrect predictions
+   - Accuracy percentage
 
 ---
 
 ## Setup
 
-### 1. Clone the repository
+### 1. Create and activate a virtual environment
 
-```bash
-git clone <repo-url>
-cd banknotes
-```
-
-### 2. Create and activate a virtual environment
-
-**Windows:**
+**Windows (PowerShell):**
 ```powershell
 python -m venv venv
-venv\Scripts\activate
+.\venv\Scripts\Activate.ps1
 ```
 
 **macOS / Linux:**
@@ -92,7 +109,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -102,20 +119,79 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the KNN classifier:
-
+**Run the final KNN implementation:**
 ```bash
 python banknotes.py
 ```
 
-Run the full model comparison:
+**Run the starter-style manual split version:**
+```bash
+python banknotes0.py
+```
 
+**Run the starter-style `train_test_split` version:**
+```bash
+python banknotes1.py
+```
+
+**Run the full model comparison:**
 ```bash
 python compare_models.py
 ```
 
 ---
 
-## Dataset
+## Example Results
 
-The dataset contains **1,372 samples**, each with 4 numerical features and a binary label. It is derived from the [UCI Banknote Authentication dataset](https://archive.ics.uci.edu/ml/datasets/banknote+authentication), where features were extracted using a Haar wavelet transform applied to 400×400 pixel greyscale images of genuine and forged banknotes.
+### `banknotes.py` — KNN
+```
+Results for model KNeighborsClassifier
+Correct: 549
+Incorrect: 0
+Accuracy: 100.00%
+```
+
+### `banknotes0.py` — Gaussian Naive Bayes
+```
+Results for model GaussianNB
+Correct: 466
+Incorrect: 82
+Accuracy: 85.04%
+```
+
+### `banknotes1.py` — Perceptron
+```
+Results for model Perceptron
+Correct: 536
+Incorrect: 13
+Accuracy: 97.63%
+```
+
+### `compare_models.py` — All Models
+```
+Model: KNeighborsClassifier
+Correct: 549 | Incorrect: 0 | Accuracy: 100.00%
+
+Model: Perceptron
+Correct: 543 | Incorrect: 6 | Accuracy:  98.91%
+
+Model: SVC
+Correct: 545 | Incorrect: 4 | Accuracy:  99.27%
+
+Model: GaussianNB
+Correct: 458 | Incorrect: 91 | Accuracy: 83.42%
+```
+
+---
+
+## Notes
+
+- The dataset file must be comma-separated (`.csv`), not tab-separated.
+- The `venv/` folder should remain local and must **not** be pushed to GitHub.
+- Results may vary slightly across runs in scripts that do not use a fixed random seed.
+
+---
+
+## Author
+
+**Faiz Tariq**
